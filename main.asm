@@ -11,6 +11,7 @@ height_prompt:	.asciiz "\npodaj wysokosc: "
 points_prompt:	.asciiz "\npodaj 5 punktow kotrolnych (wartosci procentowe):"
 x_prompt:	.asciiz "\n\nx: "
 y_prompt:	.asciiz "\ny: "
+debug_msg:	.asciiz "\ndopiero teraz skonczono obliczenia\n"
 
 control_points:	.space 10
 
@@ -27,8 +28,8 @@ bitmap:         .byte 'B'   # bfType
                 .word 54    # bfOffBits
 
                 .word 40    # biSize
-                .word 0   # biWidth
-                .word 0   # biHeight
+bw:             .word 0     # biWidth
+bh:             .word 0     # biHeight
                 .half 0     # biPlanes
                 .half 24    # biBitCount
                 .word 0     # biCompression
@@ -38,8 +39,8 @@ bitmap:         .byte 'B'   # bfType
                 .word 0     # biClrUsed
                 .word 0     # biClrImportant
 
-bitmap_data:    .space 57600
-bitmap_end:     .word 0
+#bitmap_data:    .space 57600
+#bitmap_end:     .word 0
 
 .text
 
@@ -53,8 +54,8 @@ bitmap_end:     .word 0
 #hardcoded values for testing
 #t1 - width
 #t2 - height
-li	$t1, 160
-li	$t2, 120
+li	$t1, 220
+li	$t2, 430
 
 la	$t3, control_points
 li	$t0, 10
@@ -68,33 +69,49 @@ li	$t0, 33
 sb	$t0, 3($t3)
 
 li	$t0, 55
-sb	$t0, 2($t3)
+sb	$t0, 4($t3)
 li	$t0, 84
-sb	$t0, 3($t3)
+sb	$t0, 5($t3)
 
 li	$t0, 76
-sb	$t0, 2($t3)
+sb	$t0, 6($t3)
 li	$t0, 23
-sb	$t0, 3($t3)
+sb	$t0, 7($t3)
 
 li	$t0, 90
-sb	$t0, 2($t3)
+sb	$t0, 8($t3)
 li	$t0, 90
-sb	$t0, 3($t3)
+sb	$t0, 9($t3)
 #!!!
 
 #assighning correct size
+sw	$t1, bw
+sw	$t2, bh
 
+mul	$t4, $t1, $t2		#width x heigth x 3(bytes per pixel) + 54 (bitmap header)
+sll	$t5, $t4, 1
+add	$t5, $t5, $t4
+addi	$t4, $t5, 54
+sw	$t4, bitmap_size
+
+li	$v0, 9			#sbrk
+move	$a0, $t5
+syscall
+move	$t0, $v0
 
 #fill background
-la      $t1, bitmap_data
-la      $t2, bitmap_end
-li      $t3, 0xff
+la      $t1, ($t0)
+add	$t2, $t1, $t5
+li      $t3, 0x00
 
 fill_loop:
 sb      $t3, ($t1)
 addi    $t1, $t1, 1
 blt     $t1, $t2, fill_loop
+
+li $v0, 4
+la $a0, debug_msg
+syscall
 
 #save bitmap from buffer to file
 li      $v0, 13			#open file
@@ -103,10 +120,18 @@ li      $a1 1			#write mode
 syscall
 move    $t1, $v0
 
+#write header
 li      $v0, 15			#write to file
 move    $a0, $t1		#file desc
 la      $a1, bitmap		#bitmap buffer
-lw      $a2, bitmap_size	#buffer length
+li      $a2, 54			#buffer length
+syscall
+
+#write pixels
+li      $v0, 15			#write to file
+move    $a0, $t1		#file desc
+la      $a1, ($t0)		#bitmap buffer
+move    $a2, $t5		#buffer length
 syscall
 
 li      $v0, 16			# close file
