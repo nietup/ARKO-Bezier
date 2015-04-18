@@ -15,7 +15,7 @@ y_prompt:	.asciiz "\ny: "
 control_points:	.space 10
 
 # bitmap buffer (54 bytes for header)
-bitmap_size:    .word 30054
+bitmap_size:    .word 0
                 .half 0
 
 # BMP header
@@ -27,8 +27,8 @@ bitmap:         .byte 'B'   # bfType
                 .word 54    # bfOffBits
 
                 .word 40    # biSize
-                .word 100   # biWidth
-                .word 100   # biHeight
+                .word 0   # biWidth
+                .word 0   # biHeight
                 .half 0     # biPlanes
                 .half 24    # biBitCount
                 .word 0     # biCompression
@@ -38,7 +38,7 @@ bitmap:         .byte 'B'   # bfType
                 .word 0     # biClrUsed
                 .word 0     # biClrImportant
 
-bitmap_data:    .space 30000
+bitmap_data:    .space 57600
 bitmap_end:     .word 0
 
 .text
@@ -48,10 +48,48 @@ bitmap_end:     .word 0
 #readInput.asm
 #!!!
 
+#!!!
+#WYWALIC TO POTEM:
+#hardcoded values for testing
+#t1 - width
+#t2 - height
+li	$t1, 160
+li	$t2, 120
+
+la	$t3, control_points
+li	$t0, 10
+sb	$t0, ($t3)
+li	$t0, 10
+sb	$t0, 1($t3)
+
+li	$t0, 30
+sb	$t0, 2($t3)
+li	$t0, 33
+sb	$t0, 3($t3)
+
+li	$t0, 55
+sb	$t0, 2($t3)
+li	$t0, 84
+sb	$t0, 3($t3)
+
+li	$t0, 76
+sb	$t0, 2($t3)
+li	$t0, 23
+sb	$t0, 3($t3)
+
+li	$t0, 90
+sb	$t0, 2($t3)
+li	$t0, 90
+sb	$t0, 3($t3)
+#!!!
+
+#assighning correct size
+
+
 #fill background
 la      $t1, bitmap_data
 la      $t2, bitmap_end
-li      $t3, 0x00
+li      $t3, 0xff
 
 fill_loop:
 sb      $t3, ($t1)
