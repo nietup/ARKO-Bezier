@@ -107,6 +107,8 @@ li      $t3, 0xff
 li	$t7, 0			#"y" location on inmage
 lw	$t8, bw
 lw	$t9, bh
+mul	$t8, $t8, 3
+mul	$t9, $t9, 3
 
 fill_loop:
 li	$t6, 0			#"x" location on image
