@@ -54,8 +54,8 @@ bh:             .word 0     # biHeight
 #hardcoded values for testing
 #t1 - width
 #t2 - height
-li	$t1, 220
-li	$t2, 430
+li	$t1, 520
+li	$t2, 380
 
 la	$t3, control_points
 li	$t0, 10
@@ -102,12 +102,25 @@ move	$t0, $v0
 #fill background
 la      $t1, ($t0)
 add	$t2, $t1, $t5
-li      $t3, 0x00
+li      $t3, 0xff
+
+li	$t7, 0			#"y" location on inmage
+lw	$t8, bw
+lw	$t9, bh
 
 fill_loop:
+li	$t6, 0			#"x" location on image
+
+fill_row_loop:
+#filling row
 sb      $t3, ($t1)
 addi    $t1, $t1, 1
-blt     $t1, $t2, fill_loop
+addi	$t6, $t6, 1
+blt	$t6, $t8, fill_row_loop
+
+#next row
+addi	$t7, $t7, 1
+blt     $t7, $t9, fill_loop
 
 #save bitmap from buffer to file
 li      $v0, 13			#open file
