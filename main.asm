@@ -1,3 +1,9 @@
+#ARKO project - Bezier Curve v1.0
+#by Jakub Nietupski
+#
+#Registers:
+#
+
 .data
 
 output:         .asciiz "out.bmp"
