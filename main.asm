@@ -109,10 +109,6 @@ sb      $t3, ($t1)
 addi    $t1, $t1, 1
 blt     $t1, $t2, fill_loop
 
-li $v0, 4
-la $a0, debug_msg
-syscall
-
 #save bitmap from buffer to file
 li      $v0, 13			#open file
 la      $a0, output		#file name
