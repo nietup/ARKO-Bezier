@@ -1,16 +1,10 @@
 #ARKO project - Bezier Curve v1.0
 #by Jakub Nietupski
-#
-#Registers:
-#
+#developed april 2015
 
 .data
 
 output:         .asciiz "out.bmp"
-
-# bmp values
-bitmap_width:   .word 160
-bitmap_height:  .word 120
 
 # bitmap buffer (54 bytes for header)
 bitmap_size:    .word 57654
@@ -41,14 +35,14 @@ bitmap_end:     .word 0
 
 .text
 
-#fill bacgkorer
+#fill background
 la      $t1, bitmap_data
 la      $t2, bitmap_end
-li      $t3, 0x88
+li      $t3, 0xff
 
 fill_loop:
 sb      $t3, ($t1)
-addi    $t1, $t1, 1
+addi    $t1, $t1, 0x1
 blt     $t1, $t2, fill_loop
 
 #close opened file
