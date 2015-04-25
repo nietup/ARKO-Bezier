@@ -1,3 +1,4 @@
+#pls dont do dis with x, y
 #fill background
 la      $t1, ($t0)
 add	$t2, $t1, $t5
