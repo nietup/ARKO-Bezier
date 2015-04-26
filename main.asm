@@ -12,7 +12,7 @@ height_prompt:	.asciiz "\npodaj wysokosc: "
 points_prompt:	.asciiz "\npodaj 5 punktow kotrolnych (wartosci procentowe):"
 x_prompt:	.asciiz "\n\nx: "
 y_prompt:	.asciiz "\ny: "
-debug_msg:	.asciiz "\ndopiero teraz skonczono obliczenia\n"
+debug:		.asciiz "\n-------------------------------------\n"
 
 control_points:	.word 0
 		.word 0
@@ -123,7 +123,7 @@ sb	$v0, bm_data_start
 #painting starts here
 
 #for now, u will be incremented for 1/16 (0x1000)
-li	$t0, 0x1000
+li	$t0, 0x100
 casteljau_loop:
 li	$t2, 0x10000
 sub	$t1, $t2, $t0
@@ -282,9 +282,8 @@ srl	$t3, $t3, 16
 
 la	$t6, bm_data_start		#addr
 lw	$t4, triple_w			#3 * width
-subi	$t3, $t3, 0x10000		#y0 - 1
-mul	$t3, $t3, $t4
-srl	$t3, $t3, 16			#3 * width * (y0 - 1)
+subi	$t3, $t3, 1			#y0 - 1
+mul	$t3, $t3, $t4			#3 * width * (y0 - 1)
 sll	$t7, $t2, 1
 add	$t2, $t7, $t2			#3 * x0
 add	$t6, $t6, $t3
@@ -299,7 +298,7 @@ addi	$t6, $t6, 1
 li      $t3, 0xff
 sb	$t3, ($t6)
 
-addi	$t0, $t0, 0x1000
+addi	$t0, $t0, 0x100
 blt	$t0, 0x10000, casteljau_loop
 
 #################################################
