@@ -25,7 +25,9 @@ control_points:	.word 0
 		.word 0
 		.word 0
 
-bm_data_start:	.word 0
+bm_data_start:	.word 0     # addres in heap
+
+triple_w:	.word 0     # used in painting computation
 
 # bitmap buffer (54 bytes for header)
 bitmap_size:    .word 0
@@ -102,6 +104,10 @@ sw	$t0, 36($t3)
 sw	$t1, bw
 sw	$t2, bh
 
+sll	$t4, $t1, 1
+add	$t4, $t4, $t1		#width x 3
+sw	$t4, triple_w
+
 mul	$t4, $t1, $t2		#width x heigth x 3(bytes per pixel) + 54 (bitmap header)
 sll	$t5, $t4, 1
 add	$t5, $t5, $t4
@@ -116,7 +122,7 @@ sb	$v0, bm_data_start
 #################################################
 #painting starts here
 
-#for now, u will be incremented fo 1/16 (0x1000)
+#for now, u will be incremented for 1/16 (0x1000)
 li	$t0, 0x1000
 casteljau_loop:
 li	$t2, 0x10000
@@ -247,11 +253,54 @@ mul	$t5, $t5, $t0
 srl	$t5, $t5, 16
 add	$t3, $t3, $t5			#"40" - final point
 
-#drawing point
+#for debug:
+li	$v0,4
+la	$a0,x_prompt
+syscall
+li	$v0,1
+move	$a0,$t2
+syscall
+li	$v0,4
+la	$a0,y_prompt
+syscall
+li	$v0,1
+move	$a0,$t3
+syscall
 
+#drawing point
+# (x0, y0) =
+# addr + 3 * width * (y0 - 1) + 3 * x0
+# addr + 3 * width * (y0 - 1) + 3 * x0 + 1
+# addr + 3 * width * (y0 - 1) + 3 * x0 + 2
+
+lw	$t4, bw
+lw	$t5, bh
+mul	$t2, $t2, $t4			#x0
+srl	$t2, $t2, 16
+mul	$t3, $t3, $t5			#y0
+srl	$t3, $t3, 16
+
+la	$t6, bm_data_start		#addr
+lw	$t4, triple_w			#3 * width
+subi	$t3, $t3, 0x10000		#y0 - 1
+mul	$t3, $t3, $t4
+srl	$t3, $t3, 16			#3 * width * (y0 - 1)
+sll	$t7, $t2, 1
+add	$t2, $t7, $t2			#3 * x0
+add	$t6, $t6, $t3
+add	$t6, $t6, $t2
+
+li      $t3, 0xff			#putting pixel
+sb	$t3, ($t6)
+addi	$t6, $t6, 1
+li      $t3, 0xff
+sb	$t3, ($t6)
+addi	$t6, $t6, 1
+li      $t3, 0xff
+sb	$t3, ($t6)
 
 addi	$t0, $t0, 0x1000
-#blt	$t0, 0x10000, casteljau_loop	
+blt	$t0, 0x10000, casteljau_loop
 
 #################################################
 #saving stuff starts here
@@ -274,6 +323,8 @@ syscall
 li      $v0, 15			#write to file
 move    $a0, $t1		#file desc
 la      $a1, bm_data_start	#bitmap buffer
+lw	$t5, bitmap_size
+subi	$t5, $t5, 54
 move    $a2, $t5		#buffer length
 syscall
 
