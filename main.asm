@@ -79,19 +79,19 @@ sw	$t0, ($t3)
 li	$t0, 0x1999
 sw	$t0, 4($t3)
 
-li	$t0, 0x4ccc
+li	$t0, 0xe666
 sw	$t0, 8($t3)
-li	$t0, 0x4ccf
+li	$t0, 0x1999
 sw	$t0, 12($t3)
 
-li	$t0, 0x8ccc
+li	$t0, 0x1999
 sw	$t0, 16($t3)
-li	$t0, 0xd70a
+li	$t0, 0xe666
 sw	$t0, 20($t3)
 
-li	$t0, 0xc28f
+li	$t0, 0x8000
 sw	$t0, 24($t3)
-li	$t0, 0x3ae1
+li	$t0, 0xe666
 sw	$t0, 28($t3)
 
 li	$t0, 0xe666
@@ -122,8 +122,7 @@ sb	$v0, bm_data_start
 #################################################
 #painting starts here
 
-#for now, u will be incremented for 1/16 (0x1000)
-li	$t0, 0x100
+li	$t0, 0x200
 casteljau_loop:
 li	$t2, 0x10000
 sub	$t1, $t2, $t0
@@ -182,64 +181,114 @@ mul	$t9, $t9, $t1
 srl	$t9, $t9, 16
 mul	$s1, $s1, $t0
 srl	$s1, $s1, 16
-add	$t5, $t9, $s1			#"13"
+add	$t9, $t9, $s1			#"13"
+
+li $v0,4
+la $a0,x_prompt
+syscall
+li $v0,1
+move $a0,$t4
+syscall
+li $v0,4
+la $a0,y_prompt
+syscall
+li $v0,1
+move $a0,$t3
+syscall
 
 #2nd column
 mul	$t2, $t2, $t1
 srl	$t2, $t2, 16
-mul	$t6, $t4, $t0
-srl	$t6, $t6, 16
-add	$t2, $t2, $t6
+mul	$s0, $t4, $t0
+srl	$s0, $s0, 16
+add	$t2, $t2, $s0
 mul	$t3, $t3, $t1
 srl	$t3, $t3, 16
-mul	$t7, $t5, $t0
-srl	$t7, $t7, 16
-add	$t3, $t3, $t7			#"20"
+mul	$s0, $t5, $t0
+srl	$s0, $s0, 16
+add	$t3, $t3, $s0			#"20"
 
 mul	$t4, $t4, $t1
 srl	$t4, $t4, 16
-mul	$t8, $t6, $t0
-srl	$t8, $t8, 16
-add	$t4, $t4, $t8
+mul	$s0, $t6, $t0
+srl	$s0, $s0, 16
+add	$t4, $t4, $s0
 mul	$t5, $t5, $t1
 srl	$t5, $t5, 16
-mul	$t9, $t7, $t0
-srl	$t9, $t9, 16
-add	$t5, $t5, $t9			#"21"
+mul	$s0, $t7, $t0
+srl	$s0, $s0, 16
+add	$t5, $t5, $s0			#"21"
 
 mul	$t6, $t6, $t1
 srl	$t6, $t6, 16
-mul	$t8, $t8, $t0
-srl	$t8, $t8, 16
-add	$t6, $t6, $t8
+mul	$s0, $t8, $t0
+srl	$s0, $s0, 16
+add	$t6, $t6, $s0
 mul	$t7, $t7, $t1
 srl	$t7, $t7, 16
-mul	$t9, $t9, $t0
-srl	$t9, $t9, 16
-add	$t7, $t7, $t9			#"22"
+mul	$s1, $t9, $t0
+srl	$s1, $s1, 16
+add	$t7, $t7, $s1			#"22"
+
+
+
+li $v0,4
+la $a0,x_prompt
+syscall
+li $v0,1
+move $a0,$t4
+syscall
+li $v0,4
+la $a0,y_prompt
+syscall
+li $v0,1
+move $a0,$t3
+syscall
+
+
+
 
 #3rd column
 mul	$t2, $t2, $t1
 srl	$t2, $t2, 16
-mul	$t6, $t4, $t0
-srl	$t6, $t6, 16
-add	$t2, $t2, $t6
+mul	$s0, $t4, $t0
+srl	$s0, $s0, 16
+add	$t2, $t2, $s0
 mul	$t3, $t3, $t1
 srl	$t3, $t3, 16
-mul	$t7, $t5, $t0
-srl	$t7, $t7, 16
-add	$t3, $t3, $t7			#"30"
+mul	$s0, $t5, $t0
+srl	$s0, $s0, 16
+add	$t3, $t3, $s0			#"30"
 
 mul	$t4, $t4, $t1
 srl	$t4, $t4, 16
-mul	$t6, $t6, $t0
-srl	$t6, $t6, 16
-add	$t4, $t4, $t6
+mul	$s0, $t6, $t0
+srl	$s0, $s0, 16
+add	$t4, $t4, $s0
 mul	$t5, $t5, $t1
 srl	$t5, $t5, 16
-mul	$t7, $t7, $t0
-srl	$t7, $t7, 16
-add	$t5, $t5, $t7			#"31"
+mul	$s0, $t7, $t0
+srl	$s0, $s0, 16
+add	$t5, $t5, $s0			#"31"
+
+
+
+
+li $v0,4
+la $a0,x_prompt
+syscall
+li $v0,1
+move $a0,$t4
+syscall
+li $v0,4
+la $a0,y_prompt
+syscall
+li $v0,1
+move $a0,$t3
+syscall
+
+
+
 
 #4th column
 mul	$t2, $t2, $t1
@@ -253,19 +302,24 @@ mul	$t5, $t5, $t0
 srl	$t5, $t5, 16
 add	$t3, $t3, $t5			#"40" - final point
 
-#for debug:
-li	$v0,4
-la	$a0,x_prompt
+
+
+li $v0,4
+la $a0,x_prompt
 syscall
-li	$v0,1
-move	$a0,$t2
+li $v0,1
+move $a0,$t4
 syscall
-li	$v0,4
-la	$a0,y_prompt
+li $v0,4
+la $a0,y_prompt
 syscall
-li	$v0,1
-move	$a0,$t3
+li $v0,1
+move $a0,$t3
 syscall
+
+
+
+
 
 #drawing point
 # (x0, y0) =
@@ -298,7 +352,7 @@ addi	$t6, $t6, 1
 li      $t3, 0xff
 sb	$t3, ($t6)
 
-addi	$t0, $t0, 0x100
+addi	$t0, $t0, 0x200
 blt	$t0, 0x10000, casteljau_loop
 
 #################################################
