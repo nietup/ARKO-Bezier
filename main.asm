@@ -9,9 +9,9 @@ output:		.asciiz "out.bmp"
 
 width_prompt:	.asciiz "podaj szerokosc: "
 height_prompt:	.asciiz "\npodaj wysokosc: "
-points_prompt:	.asciiz "\npodaj 5 punktow kotrolnych (fixed point 16,16):"
+points_prompt:	.asciiz "\npodaj 5 punktow kotrolnych (wartosci procentowe):"
 x_prompt:	.asciiz "\n\nx: "
-y_prompt:	.asciiz "\ny: "
+y_prompt:	.asciiz "y: "
 debug:		.asciiz "\n-------------------------------------\n"
 
 control_points:	.word 0
@@ -62,6 +62,7 @@ bh:             .word 0     # biHeight
 
 #!!!
 #readInput.asm
+
 #gathering resolution information
 #t1 - width
 #t2 - height
@@ -195,11 +196,20 @@ sw	$t2, bh
 
 sll	$t4, $t1, 1
 add	$t4, $t4, $t1		#width x 3
+
+and	$t5, $t4, 3		#division by 4 check
+beqz	$t5, no_correction
+li	$t6, 4
+sub	$t5, $t6, $t5
+add	$t4, $t4, $t5
+no_correction:
+
 sw	$t4, triple_w
 
-mul	$t4, $t1, $t2		#width x heigth x 3(bytes per pixel) + 54 (bitmap header)
-sll	$t5, $t4, 1
-add	$t5, $t5, $t4
+#mul	$t4, $t1, $t2		#width x heigth x 3(bytes per pixel) + 54 (bitmap header)
+#sll	$t5, $t4, 1
+#add	$t5, $t5, $t4
+mul	$t5, $t4, $t2
 addi	$t4, $t5, 54
 sw	$t4, bitmap_size
 

@@ -1,3 +1,4 @@
+
 #gathering resolution information
 #t1 - width
 #t2 - height
@@ -32,7 +33,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, ($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, ($t3)
 
 li      $v0, 4			#print string
 la      $a0, y_prompt
@@ -40,7 +42,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 1($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 4($t3)
 
 #2nd point
 li      $v0, 4			#print string
@@ -49,7 +52,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 2($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 8($t3)
 
 li      $v0, 4			#print string
 la      $a0, y_prompt
@@ -57,7 +61,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 3($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 12($t3)
 
 #3rd point
 li      $v0, 4			#print string
@@ -66,7 +71,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 4($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 16($t3)
 
 li      $v0, 4			#print string
 la      $a0, y_prompt
@@ -74,7 +80,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 5($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 20($t3)
 
 #4th point
 li      $v0, 4			#print string
@@ -83,7 +90,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 6($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 24($t3)
 
 li      $v0, 4			#print string
 la      $a0, y_prompt
@@ -91,7 +99,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 7($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 28($t3)
 
 #5th point
 li      $v0, 4			#print string
@@ -100,7 +109,8 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 8($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 32($t3)
 
 li      $v0, 4			#print string
 la      $a0, y_prompt
@@ -108,4 +118,5 @@ syscall
 
 li	$v0, 5			#read int
 syscall
-sb	$v0, 9($t3)
+mul	$v0, $v0, 655		#0.01 x 2^16
+sw	$v0, 36($t3)
