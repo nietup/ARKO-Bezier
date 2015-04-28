@@ -198,11 +198,12 @@ sll	$t4, $t1, 1
 add	$t4, $t4, $t1		#width x 3
 
 and	$t5, $t4, 3		#division by 4 check
-beqz	$t5, no_correction
+#beqz	$t5, no_correction
 li	$t6, 4
 sub	$t5, $t6, $t5
+and	$t5, $t5, 3
 add	$t4, $t4, $t5
-no_correction:
+#no_correction:
 
 sw	$t4, triple_w
 
@@ -233,6 +234,8 @@ blt	 $t1, $t2, fill_next_byte
 
 #beginning of casteljau algorithm
 li	$t0, 0x80
+lw	$s2, bw
+lw	$s3, bh
 casteljau_loop:
 li	$t2, 0x10000
 sub	$t1, $t2, $t0
@@ -368,11 +371,11 @@ add	$t3, $t3, $t5			#"40" - final point
 # addr + 3 * width * (y0 - 1) + 3 * x0 + 1
 # addr + 3 * width * (y0 - 1) + 3 * x0 + 2
 
-lw	$t4, bw
-lw	$t5, bh
-mul	$t2, $t2, $t4			#x0
+#lw	$t4, bw
+#lw	$t5, bh
+mul	$t2, $t2, $s2			#x0
 srl	$t2, $t2, 16
-mul	$t3, $t3, $t5			#y0
+mul	$t3, $t3, $s3			#y0
 srl	$t3, $t3, 16
 
 lw	$t6, bm_data_start		#addr
@@ -384,12 +387,13 @@ add	$t2, $t7, $t2			#3 * x0
 add	$t6, $t6, $t3
 add	$t6, $t6, $t2
 
-li      $t3, 0x0			#putting pixel
-sb	$t3, ($t6)
-addi	$t6, $t6, 1
-li      $t3, 0x0
-sb	$t3, ($t6)
-addi	$t6, $t6, 1
+#li      $t3, 0x0			#putting pixel
+#sb	$t3, ($t6)
+#addi	$t6, $t6, 1
+#li      $t3, 0x0
+#sb	$t3, ($t6)
+#addi	$t6, $t6, 1
+addi	$t6, $t6, 2
 li      $t3, 0xef
 sb	$t3, ($t6)
 
